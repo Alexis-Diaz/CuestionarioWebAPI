@@ -31,27 +31,51 @@ namespace CuestionarioWeb.API.Controllers
 
         // GET api/<UsuariosController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<Usuario> GetUsuario(int id)
         {
-            return "value";
+
+            var usuario = _usuarioBL.BuscarUsuarioPorId(id);
+            if(usuario == null)
+            {
+                return NotFound();
+            }
+            return usuario;
         }
 
         // POST api/<UsuariosController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<Usuario> PostUsuario(Usuario usuario)
         {
+            int res =_usuarioBL.GuardarNuevoUsuario(usuario);
+            if(res > 0)
+            {
+                return CreatedAtAction("GetUsuario", new { id = usuario.IdUsuario }, usuario);
+            }
+            return null;
         }
 
         // PUT api/<UsuariosController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult PutUsuario (int id, Usuario usuario)
         {
+            if(id != usuario.IdUsuario)
+            {
+                return BadRequest();
+            }
+            int res = _usuarioBL.EditarUsuario(usuario);
+            return Ok(res);
         }
 
         // DELETE api/<UsuariosController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult DeleteUsuario(int id)
         {
+            int res = _usuarioBL.EliminarUsuario(id);
+            if (res == 0)
+            {
+                return NotFound();
+            }
+            return Ok(res);
         }
     }
 }

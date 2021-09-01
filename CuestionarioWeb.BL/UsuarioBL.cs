@@ -52,5 +52,52 @@ namespace CuestionarioWeb.BL
         {
             return _usuarioDAL.ListaUsuarios();
         }
+
+        //Buscar usuario por id
+        public Usuario BuscarUsuarioPorId(int? id)
+        {
+            if(id==null || id < 0)
+            {
+                return null;
+            }
+
+            return _usuarioDAL.BuscarUsuarioPorId(id);
+        }
+
+        //Editar
+        public int EditarUsuario (Usuario usuario)
+        {
+            if(usuario != null)
+            {
+                int coincidencia = 0;
+                var user = _usuarioDAL.ListaUsuarios();
+                foreach (var item in user)
+                {
+                    if (item.NickName == usuario.NickName)
+                    {
+                        coincidencia ++;
+                    }
+                }
+
+                if (coincidencia > 0)
+                {
+                    return 0;
+                }
+              
+                return _usuarioDAL.EditarUsuario(usuario);
+            }
+            return 0;
+        }
+
+        //Eliminar
+        public int EliminarUsuario(int? id)
+        {
+            if (id == null || id < 0)
+            {
+                return 0;
+            }
+
+            return _usuarioDAL.EliminarUsuario(id);
+        }
     }
 }
