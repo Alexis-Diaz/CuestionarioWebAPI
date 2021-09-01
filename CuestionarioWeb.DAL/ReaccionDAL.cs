@@ -8,7 +8,7 @@ using CuestionarioWeb.EN;
 
 namespace CuestionarioWeb.DAL
 {
-    class ReaccionDAL
+    public class ReaccionDAL
     {
         private Contexto _context { get; set; }
 
