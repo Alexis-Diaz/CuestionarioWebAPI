@@ -32,8 +32,8 @@ namespace CuestionarioWeb.EN
             }
         }
 
-        //campos
-        public int cantidadDeReacciones;
+        [NotMapped]
+        public int cantidadDeReacciones { get; set; }
 
         //relaciones
 

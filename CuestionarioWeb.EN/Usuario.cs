@@ -56,10 +56,4 @@ namespace CuestionarioWeb.EN
         [JsonIgnore]
         public ICollection<Pregunta> Preguntas_list { get; set; }
     }
-
-    public class UsuarioAtenticado
-    {
-        public string NickName;
-        public string Password;
-    }
 }

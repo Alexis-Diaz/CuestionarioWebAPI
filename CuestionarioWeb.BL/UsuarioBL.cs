@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CuestionarioWeb.EN.LoginView;
 
 namespace CuestionarioWeb.BL
 {
@@ -31,20 +32,17 @@ namespace CuestionarioWeb.BL
         }
 
         //buscar usuario y contraseña
-        public int BuscarUsuarioYContraseña(UsuarioAtenticado usuario)
+        public bool BuscarUsuarioPorCredenciales(UsuarioAtenticado usuario)
         {
             if (!string.IsNullOrEmpty(usuario.NickName) && !string.IsNullOrEmpty(usuario.Password))
             {
-                var user = _usuarioDAL.BuscarUsuarioPorNombreDeUsuario(usuario.NickName);
-                if (usuario.Password == user[0].Password)
+                int user = _usuarioDAL.BuscarUsuarioPorCredenciales(usuario);
+                if (user == 1)
                 {
-                    //falta agregar la logica de seguridad. Por ejemplo crear una cookie de sesion para
-                    //enviarla al cliente y la guarde. Cada vez que el cliente haga una peticion el servidor
-                    //puede verificar si el usuario esta autenticado.
-                    return 1;
+                    return true;
                 }
             }
-            return 0;
+            return false;
         }
 
         //listar usuarios

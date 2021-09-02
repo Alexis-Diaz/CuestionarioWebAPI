@@ -8,7 +8,7 @@ using CuestionarioWeb.EN;
 
 namespace CuestionarioWeb.DAL
 {
-    class ReaccionDAL
+    public class ReaccionDAL
     {
         private Contexto _context { get; set; }
 
@@ -18,13 +18,14 @@ namespace CuestionarioWeb.DAL
         }
 
         //Buscar emoji por codigo 
-        public Reaccion BuscarEmojiPorCodigo(int? codigo)
+        public Reaccion BuscarEmojiPorCodigo(string codigo)
         {
-            if (codigo == null || codigo >= 0)
+            if (string.IsNullOrEmpty(codigo))
             {
                 return null;
             }
-            var emoji = _context.Reacciones.FirstOrDefault();
+          
+            Reaccion emoji = _context.Reacciones.Where(x=>x.TipoReaccion == codigo).FirstOrDefault();
             return emoji;
         }
     }
