@@ -25,37 +25,35 @@ namespace CuestionarioWeb.BL
         }
 
         //responder preguntas y a respuestas
-        public int NuevaRespuesta(Respuesta respuesta, int? IdRespuesta = null)
+        public int NuevaRespuesta(Respuesta respuesta)
         {
             //Se responde una pregunta
-            if (IdRespuesta == null)
+            
+            if (respuesta != null)
             {
-                if (respuesta != null)
+                Pregunta EsPreguntaCerrada = _preguntaDAL.BuscarPreguntaPorId(respuesta.IdPregunta);
+                if(EsPreguntaCerrada.Estado == 0)
                 {
-                    if (respuesta.IdPregunta > 0)
-                    {
-                        Pregunta preguntaExistente = _preguntaDAL.BuscarPreguntaPorId(respuesta.IdPregunta);
-                        if (preguntaExistente != null)
-                        {
-                            return _respuestaDAL.GuardarRespuesta(respuesta);
-                        }
-                    }
+                    return 2;//pregunta cerrada
                 }
-            }
-            else
-            {
+
                 //se responde a una respuesta
-                if (IdRespuesta > 0)
+                if (respuesta.AutoReferencia > 0)
                 {
-                    Respuesta respuestaEncontrada = _respuestaDAL.BuscarRespuestaPorId(IdRespuesta);
+                    Respuesta respuestaEncontrada = _respuestaDAL.BuscarRespuestaPorId(respuesta.AutoReferencia);
                     if (respuestaEncontrada != null)
-                    {
-                        respuesta.AutoReferencia = (int)IdRespuesta;
+                    { 
                         return _respuestaDAL.GuardarRespuesta(respuesta);
-
                     }
                 }
-
+                if (respuesta.IdPregunta > 0)
+                {
+                    Pregunta preguntaExistente = _preguntaDAL.BuscarPreguntaPorId(respuesta.IdPregunta);
+                    if (preguntaExistente != null)
+                    {
+                        return _respuestaDAL.GuardarRespuesta(respuesta);
+                    }
+                }
             }
             return 0;
         }
@@ -94,7 +92,7 @@ namespace CuestionarioWeb.BL
         /// <returns>La lista filtrada por reacciones de mas a menos votadas</returns>
         public List<Respuesta> ListarRespuestasPorReaccion(int? IdPregunta, int? idReaccion)
         {
-            if (IdPregunta == null || IdPregunta < 0)
+            if (IdPregunta != null || IdPregunta > 0)
             {
                 Pregunta pregunta = _preguntaDAL.BuscarPreguntaPorId(IdPregunta);
                 if (pregunta != null)
@@ -116,9 +114,9 @@ namespace CuestionarioWeb.BL
             return null;
         }
 
-        public int ReaccionarSobreRespuesta(int? idRespuesta, int? codigoEmoji)
+        public int ReaccionarSobreRespuesta(int? idRespuesta, int? codigoEmoji, int? idUsuario)
         {
-            Reaccion emoji;
+            Reaccion emoji = new Reaccion();
             if (idRespuesta == null || idRespuesta < 0 || codigoEmoji == null || codigoEmoji <= 0)
             {
                 return 0;
@@ -126,29 +124,28 @@ namespace CuestionarioWeb.BL
             switch (codigoEmoji)
             {
                 case 1:
-                    emoji = _reaccionDAL.BuscarEmojiPorCodigo((int)Reaccion.ElegirReaccion.like);
+                    emoji = _reaccionDAL.BuscarEmojiPorCodigo("&#1F44D;");
                     break;
                 case 2:
-                    emoji = _reaccionDAL.BuscarEmojiPorCodigo((int)Reaccion.ElegirReaccion.dislike);
+                    emoji = _reaccionDAL.BuscarEmojiPorCodigo("&#1F44E;");
                     break;
                 case 3:
-                    emoji = _reaccionDAL.BuscarEmojiPorCodigo((int)Reaccion.ElegirReaccion.meEncanta);
+                    emoji = _reaccionDAL.BuscarEmojiPorCodigo("&#1F497;");
                     break;
                 case 4:
-                    emoji = _reaccionDAL.BuscarEmojiPorCodigo((int)Reaccion.ElegirReaccion.meAsombra);
+                    emoji = _reaccionDAL.BuscarEmojiPorCodigo("&#1F62E;");
                     break;
                 case 5:
-                    emoji = _reaccionDAL.BuscarEmojiPorCodigo((int)Reaccion.ElegirReaccion.meEnoja);
+                    emoji = _reaccionDAL.BuscarEmojiPorCodigo("&#1F624;");
                     break;
                 case 6:
-                    emoji = _reaccionDAL.BuscarEmojiPorCodigo((int)Reaccion.ElegirReaccion.meEnamora);
+                    emoji = _reaccionDAL.BuscarEmojiPorCodigo("&#1F60D;");
                     break;
                 case 7:
-                    emoji = _reaccionDAL.BuscarEmojiPorCodigo((int)Reaccion.ElegirReaccion.meDivierte);
+                    emoji = _reaccionDAL.BuscarEmojiPorCodigo("&#1F602;");
                     break;
-                default:
-                    return 0;
             }
+        
             if (emoji != null)
             {
                 if (idRespuesta != null || idRespuesta > 0)
@@ -156,10 +153,20 @@ namespace CuestionarioWeb.BL
                     ReaccionUsuarioRespuesta reaccion = new ReaccionUsuarioRespuesta();
                     reaccion.IdRespuesta = (int)idRespuesta;
                     reaccion.IdReaccion = emoji.IdReaccion;
+                    reaccion.IdUsuario = (int)idUsuario;
                     return _reaccionUsuarioRespuesta.GuardarReaccionSobreRespuesta(reaccion);
                 }
             }
             return 0;
+        }
+
+        public Respuesta BuscarRespuestaPorId(int? id)
+        {
+            if(id==null || id < 0)
+            {
+                return null;
+            }
+            return _respuestaDAL.BuscarRespuestaPorId(id);
         }
     }
 }

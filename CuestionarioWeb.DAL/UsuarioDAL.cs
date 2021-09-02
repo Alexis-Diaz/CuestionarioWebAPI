@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CuestionarioWeb.EN.LoginView;
 
 namespace CuestionarioWeb.DAL
 {
@@ -86,6 +87,17 @@ namespace CuestionarioWeb.DAL
                 return listaUsuario;
             }
             return null;
+        }
+
+        //buscar por nombre de usuario y contraseña
+        public int BuscarUsuarioPorCredenciales(UsuarioAtenticado user)
+        {
+            if (user != null)
+            {
+                int res = _context.Usuarios.Where(x => x.NickName == user.NickName && x.Password == user.Password).Count();
+                return res;
+            }
+            return 0;
         }
 
         //listar

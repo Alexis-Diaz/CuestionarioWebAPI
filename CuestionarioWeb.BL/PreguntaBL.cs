@@ -19,6 +19,7 @@ namespace CuestionarioWeb.BL
         {
             if (pregunta != null)
             {
+                pregunta.Estado = (byte)Pregunta.EstadoDePregunta.Abierta;
                 return _preguntaDAL.GuardarPregunta(pregunta);
             }
             return 0;
@@ -89,7 +90,7 @@ namespace CuestionarioWeb.BL
         public List<Pregunta> ListarPreguntasPorMasRecientes()
         {
             List<Pregunta> lista = _preguntaDAL.ListarPreguntas();
-            lista.Sort((x, y) => DateTime.Compare(x.Fecha, y.Fecha));//ordenamos de mas reciente
+            lista.Sort((x, y) => DateTime.Compare(y.Fecha, x.Fecha));//ordenamos de mas reciente
             return lista;
         }
     }

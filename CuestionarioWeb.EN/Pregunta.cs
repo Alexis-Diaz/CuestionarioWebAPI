@@ -40,7 +40,7 @@ namespace CuestionarioWeb.EN
                     case 1:
                         EstadoPregunta = (byte)EstadoDePregunta.Abierta;
                         break;
-                    case 2:
+                    case 0:
                         EstadoPregunta = (byte)EstadoDePregunta.Cerrada;
                         break;
                     default:
@@ -71,8 +71,8 @@ namespace CuestionarioWeb.EN
 
         public enum EstadoDePregunta
         {
-            Abierta,
-            Cerrada
+            Abierta=1,
+            Cerrada=0
         }
     }
 }
