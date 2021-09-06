@@ -28,5 +28,29 @@ namespace CuestionarioWeb.DAL
             Reaccion emoji = _context.Reacciones.Where(x=>x.TipoReaccion == codigo).FirstOrDefault();
             return emoji;
         }
+
+        public Reaccion BuscarEmojiPorId(int? id)
+        {
+            if (id != null && id > 0)
+            {
+                Reaccion emoji = _context.Reacciones.Find(id);
+                return emoji;
+            }
+            return null;
+           
+        }
+
+        public List<Reaccion> ListarTodasLasReacciones()
+        {
+            try
+            {
+                return _context.Reacciones.ToList();
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+        }
     }
 }

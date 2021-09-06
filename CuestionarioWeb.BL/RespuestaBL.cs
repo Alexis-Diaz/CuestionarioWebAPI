@@ -31,27 +31,30 @@ namespace CuestionarioWeb.BL
             
             if (respuesta != null)
             {
-                Pregunta EsPreguntaCerrada = _preguntaDAL.BuscarPreguntaPorId(respuesta.IdPregunta);
-                if(EsPreguntaCerrada.Estado == 0)
+                if(respuesta.RespuestaEmitida != "")
                 {
-                    return 2;//pregunta cerrada
-                }
-
-                //se responde a una respuesta
-                if (respuesta.AutoReferencia > 0)
-                {
-                    Respuesta respuestaEncontrada = _respuestaDAL.BuscarRespuestaPorId(respuesta.AutoReferencia);
-                    if (respuestaEncontrada != null)
-                    { 
-                        return _respuestaDAL.GuardarRespuesta(respuesta);
-                    }
-                }
-                if (respuesta.IdPregunta > 0)
-                {
-                    Pregunta preguntaExistente = _preguntaDAL.BuscarPreguntaPorId(respuesta.IdPregunta);
-                    if (preguntaExistente != null)
+                    Pregunta EsPreguntaCerrada = _preguntaDAL.BuscarPreguntaPorId(respuesta.IdPregunta);
+                    if (EsPreguntaCerrada.Estado == 0)
                     {
-                        return _respuestaDAL.GuardarRespuesta(respuesta);
+                        return 2;//pregunta cerrada
+                    }
+
+                    //se responde a una respuesta
+                    if (respuesta.AutoReferencia > 0)
+                    {
+                        Respuesta respuestaEncontrada = _respuestaDAL.BuscarRespuestaPorId(respuesta.AutoReferencia);
+                        if (respuestaEncontrada != null)
+                        {
+                            return _respuestaDAL.GuardarRespuesta(respuesta);
+                        }
+                    }
+                    if (respuesta.IdPregunta > 0)
+                    {
+                        Pregunta preguntaExistente = _preguntaDAL.BuscarPreguntaPorId(respuesta.IdPregunta);
+                        if (preguntaExistente != null)
+                        {
+                            return _respuestaDAL.GuardarRespuesta(respuesta);
+                        }
                     }
                 }
             }
@@ -72,12 +75,33 @@ namespace CuestionarioWeb.BL
         }
 
         //listar segun pregunta ordenada de la mas reciente a mas antigua
+        //no incluye respuestas sobre respuestas
         public List<Respuesta> ListarRespuestasPorPregunta(int? idPregunta)
         {
             var lista = _respuestaDAL.ListarRespuestas();
-            lista = lista.Where(x => x.IdPregunta == idPregunta).ToList();
-            lista.Sort((x, y) => DateTime.Compare(x.Fecha, y.Fecha));
+            lista = lista.Where(x => x.IdPregunta == idPregunta && x.AutoReferencia == 0).ToList();
+            lista.Sort((x, y) => DateTime.Compare(y.FechaDeRespuesta, x.FechaDeRespuesta));
             return lista;
+        }
+
+        public List<List<Respuesta>>ListasDeRespuestasOrdenadasPorPreguntas()
+        {
+            try
+            {
+                List<List<Respuesta>> Lista = new List<List<Respuesta>>();
+                var listaDePreguntas = _preguntaDAL.ListarPreguntas();
+                foreach (var pregunta in listaDePreguntas)
+                {
+                    var lista = ListarRespuestasPorPregunta(pregunta.IdPregunta);
+                    Lista.Add(lista);
+                }
+                return Lista;
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
         }
 
         //por like
@@ -104,7 +128,7 @@ namespace CuestionarioWeb.BL
                     //filtramos la lista por reaccion y capturamos la cantidad
                     foreach (var item in lista)
                     {
-                        item.cantidadDeReacciones = _reaccionUsuarioRespuesta.ListarReaccionPorEmoji(item.IdRespuesta, idReaccion).Count();
+                        item.cantidadDeReacciones = _reaccionUsuarioRespuesta.ListarRespuestaPorReacciones(item.IdRespuesta, idReaccion).Count();
                     }
                     //ordenamos de mayor a menor reacciones
                     lista.OrderByDescending(x => x.cantidadDeReacciones);
@@ -114,37 +138,39 @@ namespace CuestionarioWeb.BL
             return null;
         }
 
-        public int ReaccionarSobreRespuesta(int? idRespuesta, int? codigoEmoji, int? idUsuario)
+        public List<Respuesta> ListarCatidadReaccionesPorRespuesta(int? IdPregunta)
+        {
+            if (IdPregunta != null || IdPregunta > 0)
+            {
+                Pregunta pregunta = _preguntaDAL.BuscarPreguntaPorId(IdPregunta);
+                if (pregunta != null)
+                {
+                    List<Respuesta> lista = _respuestaDAL.ListarRespuestas();
+                    //trae las respuesta de una pregunta sin incluir respueta de respuesta sobre la misma pregunta
+                    lista = lista.Where(x => x.IdPregunta == IdPregunta && x.AutoReferencia == 0).ToList();
+
+                    //filtramos la lista por reaccion y capturamos la cantidad
+                    foreach (var item in lista)
+                    {
+                        item.cantidadDeReacciones = _reaccionUsuarioRespuesta.ListarRespuestaPorReacciones(item.IdRespuesta).Count();
+                    }
+                    //ordenamos de mayor a menor reacciones
+                    lista = lista.OrderByDescending(x => x.cantidadDeReacciones).ToList();
+                    return lista;
+                }
+            }
+            return null;
+        }
+
+        public int ReaccionarSobreRespuesta(int? idRespuesta, int? idEmoji, int? idUsuario)
         {
             Reaccion emoji = new Reaccion();
-            if (idRespuesta == null || idRespuesta < 0 || codigoEmoji == null || codigoEmoji <= 0)
+            if (idRespuesta == null || idRespuesta < 0 || idEmoji == null || idEmoji <= 0)
             {
                 return 0;
             }
-            switch (codigoEmoji)
-            {
-                case 1:
-                    emoji = _reaccionDAL.BuscarEmojiPorCodigo("&#1F44D;");
-                    break;
-                case 2:
-                    emoji = _reaccionDAL.BuscarEmojiPorCodigo("&#1F44E;");
-                    break;
-                case 3:
-                    emoji = _reaccionDAL.BuscarEmojiPorCodigo("&#1F497;");
-                    break;
-                case 4:
-                    emoji = _reaccionDAL.BuscarEmojiPorCodigo("&#1F62E;");
-                    break;
-                case 5:
-                    emoji = _reaccionDAL.BuscarEmojiPorCodigo("&#1F624;");
-                    break;
-                case 6:
-                    emoji = _reaccionDAL.BuscarEmojiPorCodigo("&#1F60D;");
-                    break;
-                case 7:
-                    emoji = _reaccionDAL.BuscarEmojiPorCodigo("&#1F602;");
-                    break;
-            }
+
+            emoji = _reaccionDAL.BuscarEmojiPorId(idEmoji);
         
             if (emoji != null)
             {
@@ -167,6 +193,27 @@ namespace CuestionarioWeb.BL
                 return null;
             }
             return _respuestaDAL.BuscarRespuestaPorId(id);
+        }
+
+        public List<Reaccion> ListarTodasLasReacciones()
+        {
+            return _reaccionDAL.ListarTodasLasReacciones();
+        }
+
+        public List<ReaccionUsuarioRespuesta> ListarTodasLasReaccionesPorRespuesta(int? idRespuesta)
+        {
+            return _respuestaDAL.ListarReaccionesPorRespuestas(idRespuesta);
+        }
+
+        public List<Respuesta> ListarLosComentariosPorRespuesta(int? idRespuesta)
+        {
+            if(idRespuesta != null || idRespuesta > 0)
+            {
+                List<Respuesta> lista=_respuestaDAL.ListarComentariosPorRespuesta(idRespuesta);
+                lista = lista.OrderByDescending(x => x.FechaDeRespuesta).ToList();
+                return lista;
+            }
+            return null;
         }
     }
 }

@@ -1,0 +1,178 @@
+﻿@model CuestionarioWeb.EN.Pregunta;
+
+@{
+    ViewData["Title"] = "Details";
+
+}
+<a href="~/Preguntas/Index"><i class="bi bi-box-arrow-left" style="font-size:1.5em;"></i>&nbsp;Volver</a>
+<br />
+
+<h3>@Model.PreguntaFormulada</h3>
+@if (Model.Estado == (int)CuestionarioWeb.EN.Pregunta.EstadoDePregunta.Abierta)
+{
+     <div class="row">
+         <div class="col-sm-12 col-md-4">
+             <button class="btn btn-primary" onclick="MostrarOcultarTextAreaContainer(this);">Unirme a la discusión</button>
+         </div>
+        <div class="col-sm-12 col-md-4">
+            <form method="post" asp-action="Details" asp-controller="Preguntas">
+                <input type="hidden" name="idPregunta" value="@Model.IdPregunta"/>
+                <input type="hidden" name="ordernarPorReaccion" value="1" />
+                <input type="submit" class="btn btn-outline-secondary" value="Ordenar por reacción"/>
+            </form>
+        </div>
+         <div class="col-sm-12 col-md-4">
+                <a href="~/Preguntas/Details/@Model.IdPregunta" class="btn btn-outline-info">Ordenar por fecha</a>
+         </div>
+    </div>
+    <br />
+    <br />
+    <div id="text-area-container">
+        <form asp-action="PublicarRespuesta" asp-controller="Respuestas" method="post">
+            <input name="IdPregunta" type="hidden" value="@Model.IdPregunta" />
+            <input name="IdUsuario" type="hidden" value="@ViewData["IdUsuario"]" />
+
+            <textarea name="RespuestaEmitida" class="text-area"></textarea>
+            <input class="btn btn-success" type="submit" value="Publicar" /><br /><br />
+        </form>
+    </div>
+}
+else
+{
+<div class="row">
+    <div class="col-sm-12 col-md-3">
+        <button class="btn btn-primary" disabled>Unirme a la discusión</button>
+        <br />
+        <br />
+    </div>
+    <div class="col-sm-12 col-md-3">
+        <i style="color: rgb(65 65 65); font-size:1.4em;" class="bi bi-lock-fill"></i> El administrador ha cerrado la pregunta.
+    </div>
+    <form method="post" asp-action="Details" asp-controller="Preguntas">
+        <input type="hidden" name="idPregunta" value="@Model.IdPregunta" />
+        <input type="hidden" name="ordernarPorReaccion" value="1" />
+        <input type="submit" class="btn btn-outline-secondary" value="Ordenar por reacción" />
+    </form>
+    <div class="col-sm-12 col-md-3">
+        <a href="~/Preguntas/Details/@Model.IdPregunta" class="btn btn-outline-info">Ordenar por fecha</a>
+    </div>
+</div>
+}
+
+
+@if (ViewData["ListadoRespuestas"] != null)
+{
+    var listaRespuestas = ViewData["ListadoRespuestas"] as IList<CuestionarioWeb.EN.Respuesta>;
+    @foreach (var respuesta in listaRespuestas)
+    {
+
+        <div id="container-respuesta-@respuesta.IdRespuesta" class="container-respuesta">
+            @if (ViewData["ListaUsuarios"] != null)
+            {
+                var listaUsuarios = ViewData["ListaUsuarios"] as IList<CuestionarioWeb.EN.Usuario>;
+                foreach (var user in listaUsuarios)
+                {
+                    if (respuesta.IdUsuario == user.IdUsuario)
+                    {
+                        <span class="usuario-respuesta">@user.Nombre @user.Apellido</span>
+                    }
+                }
+            }
+            @if (ViewData["listaReaccionesPorPregunta"] != null)
+            {
+                var reaciones = ViewData["listaReaccionesPorPregunta"] as List<List<CuestionarioWeb.EN.ReaccionUsuarioRespuesta>>;
+                <div class="container-reacciones-respuesta">
+                    @foreach (var reacionesPorRespuesta in reaciones)
+                    {
+                        if (reacionesPorRespuesta[0].IdRespuesta == respuesta.IdRespuesta)
+                        {
+                            int i = 0;
+                            int[] emoji = new int[7];
+                            @foreach (var tipoReaccionPorRespuesta in reacionesPorRespuesta)
+                            {
+
+                                @if (ViewData["ListaReacciones"] != null)
+                                {
+                                    var listaReacciones = ViewData["ListaReacciones"] as IList<CuestionarioWeb.EN.Reaccion>;
+
+                                    @foreach (var reaccion in listaReacciones)
+                                    {
+                                        if (reaccion.IdReaccion == tipoReaccionPorRespuesta.IdReaccion)
+                                        {
+                                            if (!emoji.Contains(reaccion.IdReaccion))
+                                            {
+                                                <span class="reacciones-respuesta">@Html.Raw(reaccion.TipoReaccion)</span>
+                                                emoji[i] = reaccion.IdReaccion;
+                                                i++;
+                                            }
+
+                                        }
+                                    }
+
+                                }
+
+                            }
+                            <span class="numero-reacciones-respuesta">@reacionesPorRespuesta.Count()</span>
+                        }
+
+                    }
+                    <span class="comentarios-respuesta" onclick="verComentarios(@respuesta.IdRespuesta);"><span> | </span>Ver comentarios</span>
+                </div>
+            }
+
+            @respuesta.RespuestaEmitida
+            <!--acciones-->
+        <div class="container-reaccionar-mencionar">
+            <span class="reaccionar-respuesta" onclick="modalEmoji(@respuesta.IdRespuesta);"><i class="bi bi-hand-thumbs-up"></i> Reaccionar</span>
+            <span class="mencionar-respuesta" onclick="mencionarDialogo(@respuesta.IdRespuesta);"><i class="bi bi-chat-dots"></i> Mencionar</span>
+        </div>
+            <!--acciones-->
+            <!--hora-->
+            <span class="hora-respuesta">@respuesta.FechaDeRespuesta</span>
+            <!--hora-->
+            @if (ViewData["ListaReacciones"] != null)
+            {
+                var listaReacciones = ViewData["ListaReacciones"] as IList<CuestionarioWeb.EN.Reaccion>;
+                <div id="tipos-reacciones-@respuesta.IdRespuesta" class="tipos-reacciones">
+
+                    @foreach (var reaccion in listaReacciones)
+                    {
+                        <form style="display:inline" asp-controller="Preguntas" asp-action="Reaccionar" method="post">
+                            <input type="hidden" value="@respuesta.IdRespuesta" name="idRespuesta" />
+                            <input type="hidden" value="@reaccion.IdReaccion" name="idEmoji" />
+                            <input type="hidden" value="@ViewData["IdUsuario"]" name="idUsuario" />
+                            <input type="hidden" value="@Model.IdPregunta" name="idPregunta" />
+
+                            <button type="submit" style="font-size:2em; padding:3px;" class="btn btn-link">@Html.Raw(reaccion.TipoReaccion)</button>
+                        </form>
+                    }
+                </div>
+            }
+
+        </div>
+        <!--Cuadro de dialogo-->
+        <div id="mencionar-dialogo-@respuesta.IdRespuesta" class="mencionar-dialogo" >
+            
+            <div id="header-mencionar-dialogo-@respuesta.IdRespuesta" class="header-mencionar-dialogo">
+                <div class="header-mencionar-dialogo-block"></div>
+            </div>
+            <form method="post" asp-action="ComentarRespuesta" asp-controller="Respuestas">
+                <input type="hidden" value="@respuesta.IdRespuesta" name="IdRespuesta" />
+                <input type="hidden" value="@Model.IdPregunta" name="IdPregunta"/>
+                <textarea class="text-area" name="RespuestaEmitida"></textarea>
+                <input type="submit" value="Publicar" class="btn btn-success btn-publicar-dialogo" />
+            </form>
+            
+        </div>
+        <!--Fin de dialogo-->
+        <div id="comentarios-sobre-respuesta-@respuesta.IdRespuesta" class="comentarios-sobre-respuesta">
+        </div>
+    }
+}
+else
+{
+    <div>
+        <p>Parece que nadie ha respondido.</p>
+        <p>¡Sé el primero en dar una respuesta!</p>
+    </div>
+}

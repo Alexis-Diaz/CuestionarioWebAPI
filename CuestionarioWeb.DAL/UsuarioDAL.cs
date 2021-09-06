@@ -90,14 +90,14 @@ namespace CuestionarioWeb.DAL
         }
 
         //buscar por nombre de usuario y contraseña
-        public int BuscarUsuarioPorCredenciales(UsuarioAtenticado user)
+        public Usuario BuscarUsuarioPorCredenciales(UsuarioAtenticado user)
         {
             if (user != null)
             {
-                int res = _context.Usuarios.Where(x => x.NickName == user.NickName && x.Password == user.Password).Count();
+                Usuario res = _context.Usuarios.Where(x => x.NickName == user.NickName && x.Password == user.Password).FirstOrDefault();
                 return res;
             }
-            return 0;
+            return null;
         }
 
         //listar

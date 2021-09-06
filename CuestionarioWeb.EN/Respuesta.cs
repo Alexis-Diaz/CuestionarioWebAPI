@@ -23,17 +23,31 @@ namespace CuestionarioWeb.EN
 
         [Required]
         [DataType(DataType.Date)]
-        private DateTime FechaDeRespuesta;
-        public DateTime Fecha
-        {
-            get
-            {
-                return FechaDeRespuesta;
-            }
-        }
+        public DateTime FechaDeRespuesta { get; set; }
+        //public DateTime Fecha
+        //{
+        //    set
+        //    {
 
+        //        if(value != null)
+        //        {
+
+        //        }
+        //        FechaDeRespuesta = value;
+        //    }
+        //    get
+        //    {
+        //        return FechaDeRespuesta;
+        //    }
+        //}
+
+
+        //propiedades auxiliares
         [NotMapped]
         public int cantidadDeReacciones { get; set; }
+
+        [NotMapped]
+        public Usuario usuario { get; set; }
 
         //relaciones
 
@@ -54,9 +68,9 @@ namespace CuestionarioWeb.EN
         public ICollection<ReaccionUsuarioRespuesta> ReaccionUsuarioRespuesta_list { get; set; }
 
         //constructores
-        public Respuesta()
-        {
-            FechaDeRespuesta = DateTime.Now;
-        }
+        //public Respuesta()
+        //{
+        //    FechaDeRespuesta = DateTime.Now;
+        //}
     }
 }

@@ -16,14 +16,18 @@ namespace CuestionarioWeb.EN
         [Display(Name = "Pregunta")]
         public string PreguntaFormulada { get; set; }
 
-        private DateTime FechaDePregunta;
-        public DateTime Fecha
-        {
-            get
-            {
-                return FechaDePregunta;
-            }
-        }
+        public DateTime FechaDePregunta { get; set; }
+        //public DateTime Fecha
+        //{
+        //    //set
+        //    //{
+        //    //    FechaDePregunta = value;
+        //    //}
+        //    get
+        //    {
+        //        return FechaDePregunta;
+        //    }
+        //}
 
         private byte EstadoPregunta;
         public byte Estado
@@ -64,10 +68,10 @@ namespace CuestionarioWeb.EN
         public ICollection<Respuesta> Respuestas_list { get; set; }
 
         //constructor
-        public Pregunta()
-        {
-            FechaDePregunta = DateTime.Now;
-        }
+        //public Pregunta()
+        //{
+        //    FechaDePregunta = DateTime.Now;
+        //}
 
         public enum EstadoDePregunta
         {

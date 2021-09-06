@@ -16,7 +16,7 @@ namespace CuestionarioWeb.EN
         public int IdRolUsuario { get; set; }
 
         [StringLength(50, ErrorMessage = "El {0} deber tener entre {1} y {2} caracteres.", MinimumLength = 2)]
-        [Required(ErrorMessage = "El tipo de ro es requerido")]
+        [Required(ErrorMessage = "El tipo de rol es requerido")]
         [Display(Name = "Rol Usuario")]
         public string TipoRolUsuario { get; set; }
 

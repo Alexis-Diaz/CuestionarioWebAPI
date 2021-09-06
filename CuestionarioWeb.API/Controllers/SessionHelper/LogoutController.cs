@@ -37,12 +37,15 @@ namespace CuestionarioWeb.API.Controllers
 
         // POST api/<SesionController>
         [HttpPost]
-        public ActionResult<ResponseModel> PostCerrarSession(UsuarioAtenticado user)
+        public ActionResult<ResponseModel> PostCerrarSession()
         {
-            ResponseModel rm = new ResponseModel();
-            if (user.NickName != "")
+            string key = string.Format("%$DUJH238");
+
+            string cookie = Request.Cookies[key];
+            ResponseModel resm = _usuarioBL.Verify(cookie);
+            if (resm.IsAuthenticated)
             {
-                string key = string.Format("%$DUJH238");
+                ResponseModel rm = new ResponseModel();
                 var cookieSession = Request.Cookies[key];
 
                 if (!string.IsNullOrEmpty(cookieSession))
@@ -52,16 +55,17 @@ namespace CuestionarioWeb.API.Controllers
                     cookieOptions.Expires = DateTime.Now.AddDays(-1);
                     Response.Cookies.Append(key, value, cookieOptions);
                     rm.Mensaje = "Session_Expired";
-                    rm.IsAuthenticated = true;
+                    rm.StatusCode = 200;
+                    rm.IsAuthenticated = false;
                     return Ok(rm);
                 }
                 rm.Mensaje = "Not_Found";
                 rm.IsAuthenticated = false;
                 return NotFound(rm);
+               
             }
-            rm.Mensaje = "Error_al_cerrar_la_session";
-            rm.IsAuthenticated = false;
-            return BadRequest(rm);
+            return Unauthorized(resm);
+          
         }
 
         //// PUT api/<SesionController>/5

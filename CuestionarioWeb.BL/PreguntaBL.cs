@@ -90,7 +90,7 @@ namespace CuestionarioWeb.BL
         public List<Pregunta> ListarPreguntasPorMasRecientes()
         {
             List<Pregunta> lista = _preguntaDAL.ListarPreguntas();
-            lista.Sort((x, y) => DateTime.Compare(y.Fecha, x.Fecha));//ordenamos de mas reciente
+            lista.Sort((x, y) => DateTime.Compare(y.FechaDePregunta, x.FechaDePregunta));//ordenamos de mas reciente
             return lista;
         }
     }

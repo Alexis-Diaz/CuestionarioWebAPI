@@ -12,9 +12,12 @@ namespace CuestionarioWeb.BL
     public class UsuarioBL
     {
         private UsuarioDAL _usuarioDAL;
+        private RolUsuarioDAL _rol;
+
         public UsuarioBL(Contexto context)
         {
             _usuarioDAL = new UsuarioDAL(context);
+            _rol = new RolUsuarioDAL(context);
         }
 
         //guardar
@@ -32,17 +35,17 @@ namespace CuestionarioWeb.BL
         }
 
         //buscar usuario y contraseña
-        public bool BuscarUsuarioPorCredenciales(UsuarioAtenticado usuario)
+        public Usuario BuscarUsuarioPorCredenciales(UsuarioAtenticado usuario)
         {
             if (!string.IsNullOrEmpty(usuario.NickName) && !string.IsNullOrEmpty(usuario.Password))
             {
-                int user = _usuarioDAL.BuscarUsuarioPorCredenciales(usuario);
-                if (user == 1)
+                Usuario user = _usuarioDAL.BuscarUsuarioPorCredenciales(usuario);
+                if (user != null)
                 {
-                    return true;
+                    return user;
                 }
             }
-            return false;
+            return null;
         }
 
         //listar usuarios
@@ -96,6 +99,40 @@ namespace CuestionarioWeb.BL
             }
 
             return _usuarioDAL.EliminarUsuario(id);
+        }
+
+        //verificar usuario
+        public ResponseModel Verify(string cookie)
+        {
+            ResponseModel rm = new ResponseModel();
+            Usuario usuario = new Usuario();
+
+            if (!string.IsNullOrEmpty(cookie))
+            {
+                var datos = cookie.Split('|');
+                int id = 0;
+                bool res = int.TryParse(datos[0], out id);
+                if (res)
+                {
+                     usuario = _usuarioDAL.BuscarUsuarioPorId(id);
+                }
+            }
+            if(usuario.IdUsuario> 0)
+            {
+                rm.Mensaje = "User_Is_Valid";
+                rm.StatusCode = 200;
+                rm.IsAuthenticated = true;
+                rm.user = usuario;
+                rm.rol = _rol.BuscarRolUsuarioPorId(usuario.IdRolUsuario);
+
+            }
+            else
+            {
+                rm.Mensaje = "Unauthorized";
+                rm.StatusCode = 401;
+                rm.IsAuthenticated = false;
+            }
+            return rm;
         }
     }
 }

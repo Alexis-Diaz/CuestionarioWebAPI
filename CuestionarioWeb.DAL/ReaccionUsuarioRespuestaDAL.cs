@@ -31,14 +31,24 @@ namespace CuestionarioWeb.DAL
             return _context.ReaccionUsuarioRespuestas.ToList();
         }
 
-        //Buscar por reaccion y respuesta
-        public List<ReaccionUsuarioRespuesta> ListarReaccionPorEmoji(int? idRespuesta, int? idReaccion)
+        //Buscar por cantidad de reaccion especifica
+        public List<ReaccionUsuarioRespuesta> ListarRespuestaPorReacciones(int? idRespuesta, int? idReaccion)
         {
             if (idReaccion == null || idReaccion < 0)
             {
                 return null;
             }
             return _context.ReaccionUsuarioRespuestas.Where(x => x.IdReaccion == idReaccion && x.IdRespuesta == idRespuesta).ToList();
+        }
+
+        //Buscar por cantidad de reacciones
+        public List<ReaccionUsuarioRespuesta> ListarRespuestaPorReacciones(int? idRespuesta)
+        {
+            if (idRespuesta == null || idRespuesta < 0)
+            {
+                return null;
+            }
+            return _context.ReaccionUsuarioRespuestas.Where(x => x.IdRespuesta == idRespuesta).ToList();
         }
     }
 }

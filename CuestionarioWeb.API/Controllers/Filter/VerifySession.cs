@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using CuestionarioWeb.API.Controllers.SessionHelper;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Http;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CuestionarioWeb.API.Controllers.Filter
@@ -22,17 +22,17 @@ namespace CuestionarioWeb.API.Controllers.Filter
         {
             base.OnActionExecuting(filterContext);
 
-            SessionToolController tool = new SessionToolController();
-            string user = tool.GetUserInSession();
-            if (string.IsNullOrEmpty(user))
-            {
-                //Redireccionamos al usurio no autenticado al login
-                filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new
-                {
-                    controller = "Login",
-                    action = "Index"
-                }));
-            }
+
+            //LoginController tool = new LoginController();            
+            //if (string.IsNullOrEmpty(user))
+            //{
+            //    //Redireccionamos al usurio no autenticado al login
+            //    filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new
+            //    {
+            //        controller = "Login",
+            //        action = "Index"
+            //    }));
+            //}
         }
     }
 

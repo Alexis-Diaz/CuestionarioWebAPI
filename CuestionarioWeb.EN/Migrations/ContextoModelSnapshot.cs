@@ -29,6 +29,9 @@ namespace CuestionarioWeb.EN.Migrations
                     b.Property<byte>("Estado")
                         .HasColumnType("tinyint");
 
+                    b.Property<DateTime>("FechaDePregunta")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("IdUsuario")
                         .HasColumnType("int");
 
@@ -53,8 +56,8 @@ namespace CuestionarioWeb.EN.Migrations
 
                     b.Property<string>("TipoReaccion")
                         .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("nvarchar(8)");
+                        .HasMaxLength(9)
+                        .HasColumnType("nvarchar(9)");
 
                     b.HasKey("IdReaccion");
 
@@ -97,6 +100,9 @@ namespace CuestionarioWeb.EN.Migrations
 
                     b.Property<int>("AutoReferencia")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaDeRespuesta")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("IdPregunta")
                         .HasColumnType("int");
