@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using CuestionarioWeb.EN;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore.SqlServer;
+using Microsoft.AspNetCore.Http;
 
 namespace CuestionarioWeb.API
 {
@@ -34,7 +35,7 @@ namespace CuestionarioWeb.API
 
             services.AddControllers();
 
-            services.AddDbContext<Contexto>(options => options.UseSqlServer(Configuration.GetConnectionString("CadenaDeConexion")));
+            services.AddDbContext<Contexto>(options => options.UseSqlServer(Configuration.GetConnectionString("CadenaDeConexionLocal")));
 
             services.AddSwaggerGen(c =>
             {

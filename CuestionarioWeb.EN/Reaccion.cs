@@ -15,7 +15,7 @@ namespace CuestionarioWeb.EN
         public int IdReaccion { get; set; }
 
         [Required(ErrorMessage = "La reaccion es requerida")]
-        [StringLength(8)]
+        [StringLength(9)]
         public string TipoReaccion { get; set; }
       
         //relaciones

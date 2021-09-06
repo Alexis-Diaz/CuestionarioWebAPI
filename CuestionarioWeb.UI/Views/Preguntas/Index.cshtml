@@ -1,0 +1,125 @@
+﻿@model IEnumerable<CuestionarioWeb.EN.Pregunta>
+
+@{
+    ViewData["Title"] = "Question Page";
+
+}
+
+<div class="row">
+    <div class="col-sm-12 col-md-6">
+        <h2>Todas las preguntas</h2>
+    </div>
+    <div class="col-sm-12 col-md-6">
+        <button class="btn btn-light" onclick="revelarModal();">Hacer una pregunta</button>
+    </div>
+</div>
+<div id="modal-block" class="modal-block"></div>
+<div id="modal-pregunta" class="modal-pregunta">
+    <h3>Escribe tu pregunta</h3>
+    <form method="post" asp-action="Create" asp-controller="Preguntas">
+        <input type="hidden" value="@ViewData["IdUsuarioActual"]" name="IdUsuario"/>
+        <input class="form-control" name="Pregunta" type="text" />
+        <br />
+        <input class="btn btn-success" type="submit" value="Publicar" />
+        <a class="btn btn-dark" onclick="ocultarModal();" style="color:white">Cerrar</a>
+
+    </form>
+</div>
+
+<table class="table table-striped" >
+    <thead>
+        <tr>
+            <th>Pregunta</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Preguntó</th>
+            <th>Respuestas</th>
+            @if (ViewData["User"] != null)
+            {
+                var user = ViewData["User"] as CuestionarioWeb.EN.LoginView.ResponseModel;
+                if (user.rol.TipoRolUsuario == "Administrador")
+                {
+                    <th>Acciones</th>
+                }
+            }
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><a href="~/Preguntas/Details/@item.IdPregunta">@item.PreguntaFormulada</a></td>
+
+                <td>@item.FechaDePregunta</td>
+                @if (@item.Estado == 0)
+                 {
+                    <td>Cerrada</td>
+                 }
+                else 
+                { 
+                    <td>Activa</td>
+                }
+                @if(ViewData["ListaUsuarios"]!= null)
+                {
+                    var listaUsuarios = ViewData["ListaUsuarios"] as IList<CuestionarioWeb.EN.Usuario>;
+
+                    @foreach (var user in listaUsuarios)
+                    {
+                        if (user.IdUsuario == item.IdUsuario)
+                        {
+                            <td>@user.Nombre @user.Apellido</td>
+
+                        }
+                    }
+
+                }
+                @if (ViewData["CantidadRespuestas"] != null)
+                 {
+                    var listaRespuestas = ViewData["CantidadRespuestas"] as List<List<CuestionarioWeb.EN.Respuesta>>;
+                    <td class="cantidad" style="text-align: center">
+                        @foreach(var listaRespuesta in listaRespuestas)
+                        {
+                            if(listaRespuesta.Count > 0)
+                            {
+                                if (listaRespuesta[0].IdPregunta == item.IdPregunta)
+                                {
+                                    @listaRespuesta.Count()
+                                }
+                            }
+                        }
+                     </td>
+                 }
+
+                  @if (ViewData["User"] != null)
+                   {
+                        var user = ViewData["User"] as CuestionarioWeb.EN.LoginView.ResponseModel;
+                        if (user.rol.TipoRolUsuario == "Administrador")
+                        {
+                           @if(item.Estado == 1)
+                            {
+                                <th style="text-align: center"><a style="color:rgb(1 150 0); font-size:1.4em;" href="~/Preguntas/CerrarPregunta/@item.IdPregunta"><i class="bi bi-lock-fill"></i></a></th>
+                            }
+                            else
+                            {
+                                <th style="text-align: center"><i style="color: rgb(65 65 65); font-size:1.4em;" class="bi bi-lock-fill"></i></th>
+                            }
+
+                        }
+                   }
+            </tr>
+        }
+    </tbody>
+
+</table>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let cantidad = document.getElementsByClassName("cantidad");
+        for (let i = 0; i < cantidad.length; i++) {
+            if (cantidad[i].innerHTML <= 0) {
+                cantidad[i].innerHTML = "0";
+            } 
+        }
+    })
+   
+</script>

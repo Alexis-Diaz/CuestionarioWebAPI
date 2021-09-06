@@ -19,12 +19,21 @@ namespace CuestionarioWeb.DAL
         //agregar
         public int GuardarRespuesta(Respuesta respuesta)
         {
-            if (respuesta != null)
+            try
             {
-                _context.Respuestas.Add(respuesta);
-                return _context.SaveChanges();
+                if (respuesta != null)
+                {
+                    respuesta.FechaDeRespuesta = DateTime.Now;
+                    _context.Respuestas.Add(respuesta);
+                    return _context.SaveChanges();
+                }
+                return 0;
             }
-            return 0;
+            catch (Exception)
+            {
+
+                return 0;
+            }
         }
 
         //editar
@@ -33,33 +42,83 @@ namespace CuestionarioWeb.DAL
         //eliminar
         public int EliminarRespuesta(int? id)
         {
-            if (id == null || id > 0)
+            try
             {
+                if (id == null || id > 0)
+                {
+                    return 0;
+                }
+                Respuesta respuestaEncontrada = _context.Respuestas.Find(id);
+                if (respuestaEncontrada != null)
+                {
+                    _context.Respuestas.Remove(respuestaEncontrada);
+                    return _context.SaveChanges();
+                }
                 return 0;
             }
-            Respuesta respuestaEncontrada = _context.Respuestas.Find(id);
-            if (respuestaEncontrada != null)
+            catch (Exception)
             {
-                _context.Respuestas.Remove(respuestaEncontrada);
-                return _context.SaveChanges();
+
+                return 0;
             }
-            return 0;
         }
 
         //buscar por id
         public Respuesta BuscarRespuestaPorId(int? id)
         {
-            if (id == null || id < 0)
+            try
             {
+                if (id == null || id < 0)
+                {
+                    return null;
+                }
+                return _context.Respuestas.Find(id);
+            }
+            catch (Exception)
+            {
+
                 return null;
             }
-            return _context.Respuestas.Find(id);
         }
 
         //listar
         public List<Respuesta> ListarRespuestas()
         {
-            return _context.Respuestas.ToList();
+            try
+            {
+                return _context.Respuestas.ToList();
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+        }
+
+        //listar
+        public List<ReaccionUsuarioRespuesta> ListarReaccionesPorRespuestas(int? idRespuesta)
+        {
+            try
+            {
+                return _context.ReaccionUsuarioRespuestas.Where(x => x.IdRespuesta == idRespuesta).ToList();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        //listar
+        public List<Respuesta> ListarComentariosPorRespuesta (int? idRespuesta)
+        {
+            try
+            {
+                return _context.Respuestas.Where(x => x.AutoReferencia == idRespuesta).ToList();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

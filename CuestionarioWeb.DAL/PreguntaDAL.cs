@@ -20,6 +20,7 @@ namespace CuestionarioWeb.DAL
         {
             if (pregunta != null)
             {
+                pregunta.FechaDePregunta = DateTime.Now;
                 _context.Preguntas.Add(pregunta);
                 return _context.SaveChanges();
             }
@@ -35,6 +36,7 @@ namespace CuestionarioWeb.DAL
                     Pregunta preguntaEncontrada = _context.Preguntas.Find(pregunta.IdPregunta);
                     if (preguntaEncontrada != null)
                     {
+                        preguntaEncontrada.FechaDePregunta = DateTime.Now;
                         preguntaEncontrada.PreguntaFormulada = pregunta.PreguntaFormulada;
                         preguntaEncontrada.Estado = pregunta.Estado;
                         _context.Entry(preguntaEncontrada).State = EntityState.Modified;

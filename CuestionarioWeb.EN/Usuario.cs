@@ -38,6 +38,8 @@ namespace CuestionarioWeb.EN
         [Required(ErrorMessage = "El password es obligatorio.")]
         public string Password { get; set; }
 
+        //propiedades auxiliares
+
         //relaciones
 
         //uno a uno

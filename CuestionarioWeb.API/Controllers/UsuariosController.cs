@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CuestionarioWeb.EN;
 using CuestionarioWeb.BL;
 using CuestionarioWeb.API.Controllers.Filter;
+using CuestionarioWeb.EN.LoginView;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,6 +16,7 @@ namespace CuestionarioWeb.API.Controllers
     [ApiController]
     public class UsuariosController : ControllerBase
     {
+        private const string key = "%$DUJH238";
         private UsuarioBL _usuarioBL;
 
         public UsuariosController(Contexto context)
@@ -22,61 +24,98 @@ namespace CuestionarioWeb.API.Controllers
             _usuarioBL = new UsuarioBL(context);
         }
 
-
         // GET: api/<UsuariosController>
         [HttpGet]
-        public IEnumerable<Usuario> GetUsuarios()
+        public ActionResult<IEnumerable<Usuario>> GetUsuarios()
         {
-            return _usuarioBL.ListarUsuarios();
+            string cookie = Request.Cookies[key];
+            ResponseModel rm =_usuarioBL.Verify(cookie);
+            if (rm.IsAuthenticated)
+            {
+                return _usuarioBL.ListarUsuarios();
+            }
+            return Unauthorized(rm);
         }
 
         // GET api/<UsuariosController>/5
         [HttpGet("{id}")]
         public ActionResult<Usuario> GetUsuario(int id)
         {
-
-            var usuario = _usuarioBL.BuscarUsuarioPorId(id);
-            if(usuario == null)
+            string cookie = Request.Cookies[key];
+            ResponseModel rm = _usuarioBL.Verify(cookie);
+            if (rm.IsAuthenticated)
             {
-                return NotFound();
+                var usuario = _usuarioBL.BuscarUsuarioPorId(id);
+                if (usuario == null)
+                {
+                    return NotFound();
+                }
+                return usuario;
             }
-            return usuario;
+            return Unauthorized(rm);
         }
 
         // POST api/<UsuariosController>
         [HttpPost]
         public ActionResult<Usuario> PostUsuario(Usuario usuario)
         {
-            int res =_usuarioBL.GuardarNuevoUsuario(usuario);
-            if(res > 0)
+            //string cookie = Request.Cookies[key];
+            //ResponseModel rm = _usuarioBL.Verify(cookie);
+            //if (rm.IsAuthenticated)
+            //{
+            //    int res = _usuarioBL.GuardarNuevoUsuario(usuario);
+            //    if (res > 0)
+            //    {
+            //        return CreatedAtAction("GetUsuario", new { id = usuario.IdUsuario }, usuario);
+            //    }
+            //    return null;
+            //}
+            //return Unauthorized(rm);
+            int res = _usuarioBL.GuardarNuevoUsuario(usuario);
+            if (res > 0)
             {
                 return CreatedAtAction("GetUsuario", new { id = usuario.IdUsuario }, usuario);
             }
             return null;
+
         }
 
         // PUT api/<UsuariosController>/5
         [HttpPut("{id}")]
         public IActionResult PutUsuario (int id, Usuario usuario)
         {
-            if(id != usuario.IdUsuario)
+            string cookie = Request.Cookies[key];
+            ResponseModel rm = _usuarioBL.Verify(cookie);
+            if (rm.IsAuthenticated)
             {
-                return BadRequest();
+                if (id != usuario.IdUsuario)
+                {
+                    return BadRequest();
+                }
+                int res = _usuarioBL.EditarUsuario(usuario);
+                return Ok(res);
             }
-            int res = _usuarioBL.EditarUsuario(usuario);
-            return Ok(res);
+            return Unauthorized(rm);
+           
         }
 
         // DELETE api/<UsuariosController>/5
         [HttpDelete("{id}")]
         public IActionResult DeleteUsuario(int id)
         {
-            int res = _usuarioBL.EliminarUsuario(id);
-            if (res == 0)
+            string cookie = Request.Cookies[key];
+            ResponseModel rm = _usuarioBL.Verify(cookie);
+            if (rm.IsAuthenticated)
             {
-                return NotFound();
+                int res = _usuarioBL.EliminarUsuario(id);
+                if (res == 0)
+                {
+                    return NotFound();
+                }
+                return Ok(res);
             }
-            return Ok(res);
+            return Unauthorized(rm);
+            
         }
     }
 }
