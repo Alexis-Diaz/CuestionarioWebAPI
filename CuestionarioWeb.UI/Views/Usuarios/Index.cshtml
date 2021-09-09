@@ -1,0 +1,78 @@
+﻿@model List<CuestionarioWeb.EN.Usuario>
+
+@{  
+    ViewData["Title"] = "Usuarios";
+    var rm = ViewData["User"] as CuestionarioWeb.EN.LoginView.ResponseModel;
+    var ru = ViewData["Roles"] as List<CuestionarioWeb.EN.RolUsuario>;
+}
+<br />
+<h2>Usuarios</h2>
+<div style="overflow:auto">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>NickName</th>
+                <th>Rol</th>
+                <th>Password</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @if (rm.rol.TipoRolUsuario.ToLower() == "superadministrador")
+                    {
+                        <td>@item.NickName</td>
+                        @foreach (var rol in ru)
+                        {
+                            @if (rol.IdRolUsuario == item.IdRolUsuario)
+                            {
+                                <td>@rol.TipoRolUsuario</td>
+                            }
+                        }
+
+                        <td>@item.Password</td>
+                        <td><button onclick="verContraseña(@item.IdUsuario)">Ver contraseña</button></td>
+                    }
+                    else if (rm.rol.TipoRolUsuario.ToLower() == "administrador")
+                    {
+                        <td>@item.NickName</td>
+                        @foreach (var rol in ru)
+                        {
+                            @if (rol.IdRolUsuario == item.IdRolUsuario)
+                            {
+                                <td>@rol.TipoRolUsuario</td>
+                            }
+                        }
+                        <td>@item.Password</td>
+                        if (rm.user.NickName == item.NickName)
+                        {
+                            <td><button onclick="verContraseña(@item.IdUsuario)">Ver contraseña</button></td>
+                        }
+                        else
+                        {
+                            <td>No tienes suficientes permisos para ver la contraseña de otros</td>
+                        }
+                    }
+                    else
+                    {
+                        if (item.NickName == rm.user.NickName)
+                        {
+                            <td>@item.NickName</td>
+                            @foreach (var rol in ru)
+                            {
+                                @if (rol.IdRolUsuario == item.IdRolUsuario)
+                                {
+                                    <td>@rol.TipoRolUsuario</td>
+                                }
+                            }
+                            <td>@item.Password</td>
+                            <td><button onclick="verContraseña(@item.IdUsuario)">Ver contraseña</button></td>
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

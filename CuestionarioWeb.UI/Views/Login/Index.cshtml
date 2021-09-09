@@ -4,7 +4,7 @@
 }
 
 <div class="row">
-    <div class="col-sm-12 col-md-6">
+    <div id="form-login" class="col-sm-12 col-md-6">
         <br />
         <h2>Iniciar Sesion</h2>
         <br />
@@ -13,13 +13,21 @@
             <input type="text" asp-for="NickName" required /><br /><br />
             <label>Password:</label>
             <input type="password" asp-for="Password" required /><br /><br />
-            <button type="submit" class="btn btn-primary" style="margin-right:5px;">Login</button> ¿No tienes cuenta? 
+            <button type="submit" class="btn btn-primary" style="margin-right:5px;">Login</button> ¿No tienes cuenta?
             <a style="padding-left:0" class="btn btn-link" asp-action="Register" asp-controller="Login">¡Regístrate!</a> <br /> <br />
 
         </form>
     </div>
-
-    <div id="portada-login" class="col-sm-12 col-md-6 justify-content-center" style="background-color:rgb(68 110 135); height:500px;">
+ 
+    <div id="portada-login" class="col-sm-12 col-md-6">
         <span class="titulo-login">Respuestas<span class="titulo-cursiva"> online!</span></span>
+        <div id="simbolo-uno">
+            <span class="simbolo">¿</span>
+            <span class="simbolo">?</span>
+        </div>
+        <div id="simbolo-dos">
+            <span class="simbolo">¿</span>
+            <span class="simbolo">?</span>
+        </div>
     </div>
 </div>

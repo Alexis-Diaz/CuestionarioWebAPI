@@ -11,7 +11,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav id="navbar-header-layout" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Respuestas Online</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -32,15 +32,28 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Preguntas" asp-action="Index">Panel</a>
                                 </li>
+                                @if (user.rol.TipoRolUsuario.ToLower() == "comun")
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">Mi perfil</a>
+                                    </li>
+                                }
+                                else
+                                { 
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+                                    </li>
+                                }
+                                <li><span class="user-name">Bienvenido/a: <strong>@user.user.NickName</strong></span></li>
                                 <li class="nav-item">
-                                    <a style="position:absolute; right:10px;" class="btn btn-outline-danger" asp-area="" asp-controller="Login" asp-action="PostCerrarSession">Logout</a>
+                                    <a style="position:absolute; right:10px; bottom:5px;" class="btn btn-outline-danger" asp-area="" asp-controller="Login" asp-action="PostCerrarSession">Logout</a>
                                 </li>
 
                             }
                             else
                             {
                                 <li class="nav-item">
-                                    <a style="position:absolute; right:10px;" class="btn btn-outline-info" asp-area="" asp-controller="Login" asp-action="Index">Login</a>
+                                    <a style="position:absolute; right:10px; bottom:5px;" class="btn btn-outline-info" asp-area="" asp-controller="Login" asp-action="Index">Login</a>
                                 </li>
 
 
@@ -50,7 +63,7 @@
                         else
                         {
                             <li class="nav-item">
-                                <a style="position:absolute; right:10px;" class="btn btn-outline-info" asp-area="" asp-controller="Login" asp-action="Index">Login</a>
+                                <a style="position:absolute; right:10px; bottom:5px;" class="btn btn-outline-info" asp-area="" asp-controller="Login" asp-action="Index">Login</a>
                             </li>
                         }
 
@@ -65,7 +78,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer id="footer-layout" class="border-top footer text-muted">
         <div class="container">
             &copy; 2021 - CuestionarioWeb.UI - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>

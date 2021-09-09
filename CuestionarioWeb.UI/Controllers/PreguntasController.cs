@@ -39,7 +39,7 @@ namespace CuestionarioWeb.UI.Controllers
                     ViewData["CantidadRespuestas"] = CantidadRespuestas;
 
                 }
-                ViewData["Rol"] = rm.rol.TipoRolUsuario;
+                ViewData["Roles"] = rm.rol.TipoRolUsuario;
                 ViewData["IdUsuarioActual"] = rm.user.IdUsuario;
                 ViewData["ListaUsuarios"] = _usuarioBL.ListarUsuarios();
                 ViewData["User"] = rm;

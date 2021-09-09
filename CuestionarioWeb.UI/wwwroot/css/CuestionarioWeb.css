@@ -1,11 +1,112 @@
-﻿#portada-login {
-    background-color: rgb(68 110 135);
+﻿/*Home*/
+/*Eliminamos el padding bottom que le da bootstrap*/
+#navbar-header-layout {
+    margin-bottom: 0 !important;
+    z-index: 1; /*para que la sombra quede por encima del div container-home*/
+}
+
+#footer-layout {
+    background-color: white;
+    z-index:1;
+}
+
+.user-name {
+    position: absolute;
+    right: 3%;
+    top: 64px;
+}
+
+/*Proporciona el estilo de circulo para la pantalla home*/
+.circle-home {
+    border-radius: 0 0 100% 0;
+    background-color: white;
+    height: 100%;
+}
+
+.container-home {
+    background-color: orange;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 90%;
+}
+
+#home-titulo {
+    position: relative;
+    top: 89px;
+}
+/*fin Home*/
+
+/*simbolos de preguntas*/
+.simbolo {
+    color:rgb(87,87,87,0.40);
+    position:relative;
+    opacity: 0.1;
+    margin-right: 25px;
+    display: inline-block;
+    font-size: 12em;
+    transform: rotateX(0deg);
+    animation: flotar;
+    animation-duration: 10s;
+    animation-timing-function: ease;
+    animation-iteration-count: infinite;
+}
+#simbolo-uno {
+    position: fixed;
+    top: 5%;
+    left: 5%;
+}
+#simbolo-dos {
+    position: fixed;
+    right: 13%;
+    bottom: 21%;
+}
+
+@keyframes flotar{
+    0%{transform:rotateY(0deg);bottom:0px}
+    20% {transform: rotateY(30deg); bottom:6px; right:0px;}
+    40%{transform: rotateY(30deg); bottom:6px; right:6px; transform:rotate(-5deg);  }
+    60% {transform: rotateY(0deg); bottom:-6px;right:6px; transform:rotate(-5deg)}
+    80%{bottom:-6px; right:0px; transform:rotate(0deg)}
+    100%{bottom:0px}
+}
+/*fin simbolo de preguntas*/
+/*Login*/
+
+#portada-login {
+    background-color: orange;
     height: 100%;
     width: 50%;
     position: fixed;
     top: 56px;
     right: 0;
     z-index: 1;
+}
+
+@media screen and (max-width:767px){
+    #form-login {
+        color:white;
+        text-align: center;
+        top:50px;
+    }
+    #portada-login {
+        background-color: #fcb737;
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        top: 50px;
+        right: 0;
+        z-index: -1;
+    }
+    .titulo-login {
+        position: absolute;
+        top: 20%;
+        left: 10%;
+        font-size: 2.5em;
+        color: white;
+        text-shadow: 2px 2px 2px black;
+        opacity:0;
+    }
 }
 
 .left {
@@ -31,6 +132,8 @@
     text-transform: uppercase;
     font-style: italic;
 }
+
+/*fin login*/
 
 .container-respuesta{
     position:relative;
@@ -144,16 +247,35 @@
 
 .modal-pregunta {
     display: none;
-    background-color: rgb(92 127 200);
+    background-color: #fcb737;
     border: 1px solid black;
     height: 27%;
-    width: 60%;
+    width: 90%;
     position: fixed;
-    right: 20%;
+    left: 5%;
     top: 20%;
     text-align: center;
     padding: 1% 10% 0 10%;
 }
+.btn-ordenar{
+    display:inline;
+    width:170px;
+}
+@media only screen and (min-width:546) {
+    .modal-pregunta {
+        display: none;
+        background-color: #fcb737;
+        border: 1px solid black;
+        height: 27%;
+        width: 60%;
+        position: fixed;
+        left: 20%;
+        top: 20%;
+        text-align: center;
+        padding: 1% 10% 0 10%;
+    }
+}
+
 .mencionar-dialogo {
     display:none;
     position: relative;
