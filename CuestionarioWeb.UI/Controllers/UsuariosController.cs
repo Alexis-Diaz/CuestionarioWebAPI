@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CuestionarioWeb.BL;
+using CuestionarioWeb.EN;
+using CuestionarioWeb.EN.LoginView;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,10 +12,65 @@ namespace CuestionarioWeb.UI.Controllers
 {
     public class UsuariosController : Controller
     {
-        // GET: UsuariosController
+      
+        private UsuarioBL _usuarioBL;
+        private RolUsuarioBL _rolBL;
+      
+        private const string key = "%$DUJH238";
+
+        public UsuariosController(Contexto context)
+        { 
+            _usuarioBL = new UsuarioBL(context);
+            _rolBL = new RolUsuarioBL(context);
+        }
+
+        // GET: PreguntasController
         public ActionResult Index()
         {
-            return View();
+            string cookie = Request.Cookies[key];
+            ResponseModel rm = _usuarioBL.Verify(cookie);
+            if (rm.IsAuthenticated && (rm.rol.TipoRolUsuario.ToLower() == "administrador" || rm.rol.TipoRolUsuario.ToLower() == "superadministrador"))
+            {
+                var ListUsuarios=_usuarioBL.ListarUsuarios();
+                if (ListUsuarios.Count() > 0) 
+                {
+                    foreach(var user in ListUsuarios)
+                    {
+                        int longitudPassword = user.Password.Count();
+                        user.Password = "";
+                        for(int i = 0; i<longitudPassword; i++)
+                        {
+                            user.Password += "*";
+                        }
+                    }
+                }
+                List<RolUsuario> roles = _rolBL.ListarRolesDeUsuarios();
+                ViewData["Roles"] = roles;
+                ViewData["User"] = rm;
+                return View(ListUsuarios);
+            }
+            if (rm.IsAuthenticated && rm.rol.TipoRolUsuario.ToLower() == "comun")
+            {
+                var ListUsuarios = _usuarioBL.ListarUsuarios();
+                ListUsuarios = ListUsuarios.Where(x => x.NickName == rm.user.NickName).ToList();
+                if (ListUsuarios.Count() > 0)
+                {
+                    foreach (var user in ListUsuarios)
+                    {
+                        int longitudPassword = user.Password.Count();
+                        user.Password = "";
+                        for (int i = 0; i < longitudPassword; i++)
+                        {
+                            user.Password += "*";
+                        }
+                    }
+                }
+                List<RolUsuario> roles = _rolBL.ListarRolesDeUsuarios();
+                ViewData["Roles"] = roles;
+                ViewData["User"] = rm;
+                return View(ListUsuarios);
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: UsuariosController/Details/5

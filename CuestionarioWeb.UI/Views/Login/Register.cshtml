@@ -3,13 +3,13 @@
     ViewData["Title"] = "Register";
 
 }
-
-<h1>Crea una cuenta</h1>
-
-<h4>Introduce tus datos</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6" style="position:relative">
+        <br />
+        <br />
+        <h1>Crea una cuenta</h1>
+        <h4>Introduce tus datos</h4>
+        <hr />
         <form asp-action="Register">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -49,6 +49,17 @@
                 <input type="submit" value="Unirme" class="btn btn-primary" />
             </div>
         </form>
+    </div>
+    <div class="container-home" style="z-index:-1;">
+        <div class="circle-home"></div>
+        <div id="simbolo-uno">
+            <span class="simbolo">¿</span>
+            <span class="simbolo">?</span>
+        </div>
+        <div id="simbolo-dos">
+            <span class="simbolo">¿</span>
+            <span class="simbolo">?</span>
+        </div>
     </div>
 </div>
 

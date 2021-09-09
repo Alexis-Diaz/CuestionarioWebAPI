@@ -20,90 +20,146 @@ namespace CuestionarioWeb.DAL
         //agregar
         public int GuardarUsuario(Usuario usuario)
         {
-            if (usuario != null)
+            try
             {
-                _context.Usuarios.Add(usuario);
-                return _context.SaveChanges();
+                if (usuario != null)
+                {
+                    _context.Usuarios.Add(usuario);
+                    return _context.SaveChanges();
+                }
+                return 0;
             }
-            return 0;
+            catch (Exception)
+            {
+
+                return 0;
+            }
         }
 
         //editar
         public int EditarUsuario(Usuario usuario)
         {
-            if (usuario != null)
+            try
             {
-                Usuario usuarioEncontrado = _context.Usuarios.Find(usuario.IdRolUsuario);
-                if (usuarioEncontrado != null)
+                if (usuario != null)
                 {
-                    usuarioEncontrado.Nombre = usuario.Nombre;
-                    usuarioEncontrado.Apellido = usuario.Apellido;
-                    usuarioEncontrado.FechaNacimiento = usuario.FechaNacimiento;
-                    usuarioEncontrado.NickName = usuario.NickName;
-                    usuarioEncontrado.Password = usuario.Password;
-                    usuarioEncontrado.IdRolUsuario = usuario.IdRolUsuario;
+                    Usuario usuarioEncontrado = _context.Usuarios.Find(usuario.IdRolUsuario);
+                    if (usuarioEncontrado != null)
+                    {
+                        usuarioEncontrado.Nombre = usuario.Nombre;
+                        usuarioEncontrado.Apellido = usuario.Apellido;
+                        usuarioEncontrado.FechaNacimiento = usuario.FechaNacimiento;
+                        usuarioEncontrado.NickName = usuario.NickName;
+                        usuarioEncontrado.Password = usuario.Password;
+                        usuarioEncontrado.IdRolUsuario = usuario.IdRolUsuario;
 
-                    _context.Entry(usuarioEncontrado).State = EntityState.Modified;
-                    return _context.SaveChanges();
+                        _context.Entry(usuarioEncontrado).State = EntityState.Modified;
+                        return _context.SaveChanges();
+                    }
                 }
+                return 0;
             }
-            return 0;
+            catch (Exception)
+            {
+
+                return 0;
+            }
         }
 
         //eliminar
         public int EliminarUsuario(int? id)
         {
-            if (id == null || id < 0)
+            try
             {
+                if (id == null || id < 0)
+                {
+                    return 0;
+                }
+
+                Usuario usuarioEncontrado = _context.Usuarios.Find(id);
+                if (usuarioEncontrado != null)
+                {
+                    _context.Usuarios.Remove(usuarioEncontrado);
+                    return _context.SaveChanges();
+                }
                 return 0;
             }
-
-            Usuario usuarioEncontrado = _context.Usuarios.Find(id);
-            if (usuarioEncontrado != null)
+            catch (Exception)
             {
-                _context.Usuarios.Remove(usuarioEncontrado);
-                return _context.SaveChanges();
+
+                return 0;
             }
-            return 0;
         }
 
 
         //buscar por id
         public Usuario BuscarUsuarioPorId(int? id)
         {
-            if (id == null || id < 0)
+            try
             {
+                if (id == null || id < 0)
+                {
+                    return null;
+                }
+                return _context.Usuarios.Find(id);
+            }
+            catch (Exception)
+            {
+
                 return null;
             }
-            return _context.Usuarios.Find(id);
         }
 
         //buscar por nombre de usuario
         public List<Usuario> BuscarUsuarioPorNombreDeUsuario(string nombreUsuario)
         {
-            if (!string.IsNullOrEmpty(nombreUsuario))
+            try
             {
-                List<Usuario> listaUsuario = _context.Usuarios.Where(x => x.NickName == nombreUsuario).ToList();
-                return listaUsuario;
+                if (!string.IsNullOrEmpty(nombreUsuario))
+                {
+                    List<Usuario> listaUsuario = _context.Usuarios.Where(x => x.NickName == nombreUsuario).ToList();
+                    return listaUsuario;
+                }
+                return null;
             }
-            return null;
+            catch (Exception)
+            {
+
+                return null;
+            }
         }
 
         //buscar por nombre de usuario y contraseña
         public Usuario BuscarUsuarioPorCredenciales(UsuarioAtenticado user)
         {
-            if (user != null)
+            try
             {
-                Usuario res = _context.Usuarios.Where(x => x.NickName == user.NickName && x.Password == user.Password).FirstOrDefault();
-                return res;
+                if (user != null)
+                {
+                    Usuario res = _context.Usuarios.Where(x => x.NickName == user.NickName && x.Password == user.Password).FirstOrDefault();
+                    return res;
+                }
+                return null;
             }
-            return null;
+            catch (Exception)
+            {
+
+                return null;
+            }
         }
 
         //listar
         public List<Usuario> ListaUsuarios()
         {
-            return _context.Usuarios.ToList();
+            try
+            {
+                return _context.Usuarios.ToList();
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
         }
     }
 }

@@ -11,31 +11,34 @@
 @if (Model.Estado == (int)CuestionarioWeb.EN.Pregunta.EstadoDePregunta.Abierta)
 {
      <div class="row">
-         <div class="col-sm-12 col-md-4">
-             <button class="btn btn-primary" onclick="MostrarOcultarTextAreaContainer(this);">Unirme a la discusión</button>
+         <div class="col-sm-12 col-md-6">
+             <button class="btn btn-primary" onclick="MostrarOcultarTextAreaContainer(this);">Unirme a la discusión</button><br /><br />
+             <div id="text-area-container">
+                 <form asp-action="PublicarRespuesta" asp-controller="Respuestas" method="post">
+                     <input name="IdPregunta" type="hidden" value="@Model.IdPregunta" />
+                     <input name="IdUsuario" type="hidden" value="@ViewData["IdUsuario"]" />
+                     <textarea name="RespuestaEmitida" class="text-area"></textarea>
+                     <input class="btn btn-success" type="submit" value="Publicar" /><br /><br />
+                 </form>
+             </div>
          </div>
-        <div class="col-sm-12 col-md-4">
-            <form method="post" asp-action="Details" asp-controller="Preguntas">
-                <input type="hidden" name="idPregunta" value="@Model.IdPregunta"/>
-                <input type="hidden" name="ordernarPorReaccion" value="1" />
-                <input type="submit" class="btn btn-outline-secondary" value="Ordenar por reacción"/>
-            </form>
+        <div class="col-sm-12 col-md-6">
+            <div class="row">
+                <div class="col-sm-12 col-md-6 btn-ordenar">
+                    <form method="post" asp-action="Details" asp-controller="Preguntas" class="btn-ordenar">
+                        <input type="hidden" name="idPregunta" value="@Model.IdPregunta" />
+                        <input type="hidden" name="ordernarPorReaccion" value="1" />
+                        <input type="submit" class="btn btn-outline-secondary mb-1" value="Ordenar por reacción" />
+                    </form>
+                </div>
+                <div class="col-sm-12 col-md-6 btn-ordenar">
+                    <a href="~/Preguntas/Details/@Model.IdPregunta" class="btn btn-outline-info mb-1">Ordenar por fecha</a>
+                </div>
+            </div>
         </div>
-         <div class="col-sm-12 col-md-4">
-                <a href="~/Preguntas/Details/@Model.IdPregunta" class="btn btn-outline-info">Ordenar por fecha</a>
-         </div>
-    </div>
-    <br />
-    <br />
-    <div id="text-area-container">
-        <form asp-action="PublicarRespuesta" asp-controller="Respuestas" method="post">
-            <input name="IdPregunta" type="hidden" value="@Model.IdPregunta" />
-            <input name="IdUsuario" type="hidden" value="@ViewData["IdUsuario"]" />
-
-            <textarea name="RespuestaEmitida" class="text-area"></textarea>
-            <input class="btn btn-success" type="submit" value="Publicar" /><br /><br />
-        </form>
-    </div>
+       
+     </div>
+   
 }
 else
 {
@@ -143,7 +146,7 @@ else
                             <input type="hidden" value="@ViewData["IdUsuario"]" name="idUsuario" />
                             <input type="hidden" value="@Model.IdPregunta" name="idPregunta" />
 
-                            <button type="submit" style="font-size:2em; padding:3px;" class="btn btn-link">@Html.Raw(reaccion.TipoReaccion)</button>
+                            <button type="submit" style="font-size:1.5em; padding:3px;" class="btn btn-link">@Html.Raw(reaccion.TipoReaccion)</button>
                         </form>
                     }
                 </div>
