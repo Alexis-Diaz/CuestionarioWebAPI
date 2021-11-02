@@ -67,6 +67,7 @@ namespace CuestionarioWeb.API.Controllers
             ResponseModel rm = _usuarioBL.Verify(cookie);
             if (rm.IsAuthenticated)
             {
+                pregunta.IdUsuario = rm.user.IdUsuario;
                 int res = _preguntaBL.GuardarPregunta(pregunta);
                 if (res > 0)
                 {
