@@ -16,7 +16,7 @@
 <div id="modal-block" class="modal-block"></div>
 <div id="modal-pregunta" class="modal-pregunta">
     <h3>Escribe tu pregunta</h3>
-    <form method="post" asp-action="Create" asp-controller="Preguntas">
+    <form class="formulario-pregunta" method="post" asp-action="Create" asp-controller="Preguntas">
         <input type="hidden" value="@ViewData["IdUsuarioActual"]" name="IdUsuario"/>
         <input class="form-control" name="Pregunta" type="text" />
         <br />

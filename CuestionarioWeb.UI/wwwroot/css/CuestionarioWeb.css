@@ -41,13 +41,13 @@
 .simbolo {
     color:rgb(87,87,87,0.40);
     position:relative;
-    opacity: 0.1;
+    opacity: 0.2;
     margin-right: 25px;
     display: inline-block;
     font-size: 12em;
     transform: rotateX(0deg);
     animation: flotar;
-    animation-duration: 10s;
+    animation-duration: 20s;
     animation-timing-function: ease;
     animation-iteration-count: infinite;
 }
@@ -64,10 +64,11 @@
 
 @keyframes flotar{
     0%{transform:rotateY(0deg);bottom:0px}
-    20% {transform: rotateY(30deg); bottom:6px; right:0px;}
-    40%{transform: rotateY(30deg); bottom:6px; right:6px; transform:rotate(-5deg);  }
-    60% {transform: rotateY(0deg); bottom:-6px;right:6px; transform:rotate(-5deg)}
-    80%{bottom:-6px; right:0px; transform:rotate(0deg)}
+    10%{transform: rotateY(365deg)}
+    20% {transform: rotateY(365degdeg); bottom:10px; right:0px;}
+    40%{transform: rotateY(365deg); bottom:10px; right:10px; transform:rotate(-8deg);  }
+    60% {transform: rotateY(30deg); bottom:-10px;right:10px; transform:rotate(-8deg)}
+    80%{bottom:-15px; right:0px; transform:rotate(0deg)}
     100%{bottom:0px}
 }
 /*fin simbolo de preguntas*/
@@ -82,12 +83,15 @@
     right: 0;
     z-index: 1;
 }
-
+#form-login {
+    z-index: 1;
+}
 @media screen and (max-width:767px){
     #form-login {
         color:white;
         text-align: center;
         top:50px;
+       
     }
     #portada-login {
         background-color: #fcb737;
@@ -249,14 +253,21 @@
     display: none;
     background-color: #fcb737;
     border: 1px solid black;
-    height: 27%;
+    height: 172px;
     width: 90%;
     position: fixed;
     left: 5%;
     top: 20%;
     text-align: center;
-    padding: 1% 10% 0 10%;
+    padding: 10px 10% 0 10%;
 }
+.formulario-pregunta {
+    position: absolute;
+    width: 80%;
+    top: 56px;
+    right: 10%;
+}
+
 .btn-ordenar{
     display:inline;
     width:170px;

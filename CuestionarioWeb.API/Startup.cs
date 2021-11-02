@@ -35,7 +35,7 @@ namespace CuestionarioWeb.API
 
             services.AddControllers();
 
-            services.AddDbContext<Contexto>(options => options.UseSqlServer(Configuration.GetConnectionString("CadenaDeConexionLocal")));
+            services.AddDbContext<Contexto>(options => options.UseSqlServer(Configuration.GetConnectionString("CadenaDeConexionRemota")));
 
             services.AddSwaggerGen(c =>
             {

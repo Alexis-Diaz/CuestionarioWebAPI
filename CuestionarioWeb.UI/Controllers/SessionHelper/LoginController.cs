@@ -55,34 +55,38 @@ namespace CuestionarioWeb.UI.Controllers.SessionHelper
                 if (!string.IsNullOrEmpty(user.NickName) && !string.IsNullOrEmpty(user.Password))
                 {
                     Usuario usuarioLoguedo = _usuarioBL.BuscarUsuarioPorCredenciales(user);
-                    if (usuarioLoguedo.IdRolUsuario > 0)
+                    if (usuarioLoguedo != null )
                     {
-                        RolUsuario rol = _rol.BuscarRolUsuarioPorId(usuarioLoguedo.IdRolUsuario);
-                        if (rol.IdRolUsuario > 0)
+                        if(usuarioLoguedo.IdRolUsuario > 0)
                         {
-                            DateTime expires = DateTime.Now.AddHours(12);
-                            string value = string.Format("{0}|{1}|{2}|{3}", usuarioLoguedo.IdUsuario, user.NickName, usuarioLoguedo.Nombre, rol.TipoRolUsuario);
+                            RolUsuario rol = _rol.BuscarRolUsuarioPorId(usuarioLoguedo.IdRolUsuario);
+                            if (rol.IdRolUsuario > 0)
+                            {
+                                DateTime expires = DateTime.Now.AddHours(12);
+                                string value = string.Format("{0}|{1}|{2}|{3}", usuarioLoguedo.IdUsuario, user.NickName, usuarioLoguedo.Nombre, rol.TipoRolUsuario);
 
-                            CookieOptions cookieOption = new CookieOptions();
-                            cookieOption.IsEssential = true;
-                            cookieOption.Domain = "localhost";
-                            cookieOption.Expires = expires;
-                            HttpContext.Response.Cookies.Append(key, value, cookieOption);
+                                CookieOptions cookieOption = new CookieOptions();
+                                cookieOption.IsEssential = true;
+                                //cookieOption.Domain = "http://www.cuestionarioweb.somee.com/";
+                                cookieOption.Expires = expires;
+                                HttpContext.Response.Cookies.Append(key, value, cookieOption);
 
-                            rm.user = usuarioLoguedo;
-                            rm.rol = rol;
-                            rm.Mensaje = "Usuario_Autenticado";
-                            rm.StatusCode = 200;
-                            rm.IsAuthenticated = true;
-                            return RedirectToAction("Index", "Preguntas");
+                                rm.user = usuarioLoguedo;
+                                rm.rol = rol;
+                                rm.Mensaje = "Usuario_Autenticado";
+                                rm.StatusCode = 200;
+                                rm.IsAuthenticated = true;
+                                return RedirectToAction("Index", "Preguntas");
 
+                            }
                         }
+                      
                     }
                 }
-                rm.Mensaje = "Bad_Request";
+                rm.Mensaje = "Usuario Inválido";
                 rm.StatusCode = 400;
                 rm.IsAuthenticated = false;
-                return Index();
+                return View("Index");
             }
 
 
